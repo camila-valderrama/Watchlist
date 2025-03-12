@@ -1,15 +1,3 @@
-/*import React from 'react'
-
-const Header = () => {
-    return (
-        <div className='flex bg-gray-800 justify-center'>
-            <img src='/header.svg' alt="" className='w-300' />
-        </div>
-    )
-}
-
-export default Header */
-
 import React from 'react';
 
 const Header = () => {

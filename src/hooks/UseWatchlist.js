@@ -1,34 +1,31 @@
 import { useState, useEffect } from 'react';
 
 const useWatchlist = () => {
-  const [watchlist, setWatchlist] = useState([]);
+  // Inicializa watchlist con los datos guardados en localStorage
+  const [watchlist, setWatchlist] = useState(() => {
+    const savedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+    return savedWatchlist;
+  });
 
+  // Guarda watchlist en localStorage cada vez que cambia
+  useEffect(() => {
+    localStorage.setItem("watchlist", JSON.stringify(watchlist));
+  }, [watchlist]);
 
   const addToWatchlist = (movie) => {
-    //Agrega una pelicula al array del estado
-    setWatchlist([...watchlist, movie]);
-
-    //Agrega una pelicula al array del localStorage
-    localStorage.setItem("watchlist", JSON.stringify([...watchlist, movie]));
-  }
+    setWatchlist((prevWatchlist) => {
+      const updatedList = [...prevWatchlist, movie];
+      return updatedList;
+    });
+  };
 
   const removeFromWatchlist = (id) => {
-    const updatedList = watchlist.filter(movie => movie.id !== id);
-    setWatchlist(updatedList);
-    localStorage.setItem("watchlist", JSON.stringify(updatedList));
-  }
-
-  //Carga la lista desde localStorage
-  useEffect(() => {
-    const savedWatchlist = JSON.parse(localStorage.getItem("watchlist")) || []
-    setWatchlist(savedWatchlist)
-  }, [])
-
-  return {
-    watchlist,
-    addToWatchlist,
-    removeFromWatchlist,
+    setWatchlist((prevWatchlist) => {
+      return prevWatchlist.filter(movie => movie.id !== id);
+    });
   };
+
+  return { watchlist, addToWatchlist, removeFromWatchlist };
 }
 
 export default useWatchlist;
